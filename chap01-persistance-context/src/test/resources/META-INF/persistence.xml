@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<persistence xmlns="http://xmlns.jcp.org/xml/ns/persistence" version="2.2">
+
+    <!-- 엔티티 매니저 팩토리를 식별하기 위한 설정-->
+    <persistence-unit name="jpatest">
+        <class>com.ohgiraffers.section02.Menu</class>
+        <properties>
+            <property name="jakarta.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>
+            <property name="jakarta.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/menudb"/>
+            <property name="jakarta.persistence.jdbc.user" value="gangnam"/>
+            <property name="jakarta.persistence.jdbc.password" value="gangnam"/>
+
+        <!-- hibernate 설정 (실해 되는 sql 구문을 확인 홰 보기 위함)-->
+            <property name="hibernate.show_sql" value="true"/>
+            <property name="hibernate.format_sql" value="true"/>
+<!--  <property name="hibernate.format_sql" value="true"/> 보기좋게 정렬해준다.-->
+        </properties>
+    </persistence-unit>
+</persistence>
