@@ -71,10 +71,52 @@ public class A_EntityManagerCRUDTests {
         // 데이터가 영속성 컨텍스트에 포함되어 있는지 확인
         Assertions.assertTrue(entityManager.contains(menu));
 
+        // tests passed 가 통과했으면 체크 표시가 된다. 이게 통과가 되었다는 뜻. 통과가 아니면 체크가 안되었을듯.
 
+    }
 
+    @Test
+    public void 메뉴_이름_수정_테스트(){
+        Menu menu = entityManager.find(Menu.class, 2);
+        System.out.println("menu = " + menu);
 
+        // 데이터베이스의 상태 변화를 하나의 단위로 묶어주는 기능을 할 객체
+        EntityTransaction entityTransaction = entityManager.getTransaction();
+        entityTransaction.begin();
+        // 1. 트랜잭션 -> begin
+        // 2. 가지고 온 애로 수정을 원하는 거 set 해줌.
+        // 3. 바꾼 이름과 지금 꺼내보고 두개가 같은지 (제대로 바꼈는지) 체크하면 완료 ! // tests passed 체크가 되면 성공 !
 
+        try{
+            // 반드시 트랜잭션 후 !!!!
+            // entityManager 에서 원하는 데이터를 가지고 온 후에 이름만 set 으로 다시 넣어준 후 마무리 하면 이름이 바뀐다.
+           menu.setMenuName("쿠우쿠우골드");
+           entityTransaction.commit();
+        }catch(Exception e){
+            entityTransaction.rollback();
+            e.printStackTrace();
+        }
 
+        Assertions.assertEquals("쿠우쿠우골드", entityManager.find(Menu.class, 2).getMenuName());
+
+    }
+
+    @Test
+    public void 메뉴_삭제하기_테스트(){
+
+        Menu menuToRemove = entityManager.find(Menu.class, 19009);
+
+        EntityTransaction entityTransaction = entityManager.getTransaction();
+        entityTransaction.begin();
+
+        try{
+            entityManager.remove(menuToRemove);
+            entityTransaction.commit();
+        }catch(Exception e){
+            entityTransaction.rollback();
+            e.printStackTrace();
+        }
+        Menu removedMenu = entityManager.find(Menu.class, 19009);
+        Assertions.assertNull(removedMenu);//  null 이면 성공 !
     }
 }
