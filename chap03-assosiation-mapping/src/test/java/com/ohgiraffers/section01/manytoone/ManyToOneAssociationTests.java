@@ -106,6 +106,8 @@ public class ManyToOneAssociationTests {
 
     }
 
+    // 부모가 자식을 한명만 가지면 같이 지울 수 있는데, 여러 자식이 참조중이면 지울 수 없다.
+
     @Test
     void 영속성_삭제_테스트(){
 
@@ -121,7 +123,55 @@ public class ManyToOneAssociationTests {
         System.out.println("deletedCategory = " + deletedCategory);
     }
 
-    // 부모가 자식을 한명만 가지면 같이 지울 수 있는데, 여러 자식이 참조중이면 지울 수 없다.
+
+
+    @Test
+    void Merge_Insert_테스트() {
+
+        MenuAndCategory menuAndCategory = new MenuAndCategory();
+        menuAndCategory.setMenuPrice(15000);
+        menuAndCategory.setMenuName("merge insert 메뉴");
+        menuAndCategory.setOrderableStatus("Y");
+        Category category = new Category();
+        category.setCategoryName("merge 카테고리");
+
+        menuAndCategory.setCategory(category);
+
+        EntityTransaction transaction = entityManager.getTransaction();
+        transaction.begin();
+        MenuAndCategory merge = entityManager.merge(menuAndCategory);
+
+        transaction.commit();
+
+        System.out.println("merge = " + merge);
+    }
+
+    @Test
+    void detach_테스트(){
+
+        /*
+        * Detach 의 경우 해당 엔티티를 영속성 컨텍스트에서 관리하지 않겠다고 하는 것이다.
+        * ( 준영속화 )
+        * 그러나 해당 관계를 맺고 있는 엔티티의 수정이 생기는 경우 해당 엔티티는 관리 중이기 때문에 함꼐 관계를
+        * 가지고 간다.
+        * 이러한 문제를 해경하기 위해 CascadeType 을 DETACH 로 설정하면
+        * 관계 요소도 함꼐 영속성에서 관리하지 않겠다는 것이다.
+        * */
+
+        MenuAndCategory menuAndCategory = entityManager.find(MenuAndCategory.class, 23);
+        menuAndCategory.setMenuName("변경함함");
+        Category category = menuAndCategory.getCategory();
+        category.setCategoryName("진짜 안바뀌나??");
+        menuAndCategory.setCategory(category);
+
+        EntityTransaction transaction = entityManager.getTransaction();
+        transaction.begin();
+        entityManager.detach(menuAndCategory); // 카테고리만 변경되고 메뉴 이름은 변경이 안된다.
+        transaction.commit();
+
+        Category category1 = entityManager.find(Category.class, 23);
+        System.out.println("category1 = " + category1);
+    }
     
     
     

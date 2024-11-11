@@ -1,4 +1,4 @@
-package com.ohgiraffers.section03.projection;
+package com.ohgiraffers.section04.paging;
 
 
 import jakarta.persistence.Column;
@@ -6,7 +6,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
-@Entity(name = "menu_section03")
+@Entity(name = "menu_section04")
 @Table(name = "tbl_menu")
 public class Menu {
 

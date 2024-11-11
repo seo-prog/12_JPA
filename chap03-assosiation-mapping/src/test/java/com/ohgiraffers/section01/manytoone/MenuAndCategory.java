@@ -22,14 +22,13 @@ package com.ohgiraffers.section01.manytoone;
 
 import jakarta.persistence.*;
 
-import static jakarta.persistence.CascadeType.REMOVE;
-
 @Entity(name = "menu_and_category")
 @Table(name = "tbl_menu")
 public class MenuAndCategory {
 
     @Id
     @Column(name = "menu_code")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int menuCode;
 
     @Column(name = "menu_name")
@@ -42,12 +41,14 @@ public class MenuAndCategory {
     * CascadeType
     * - PERSIST : 자식의 값이 저장될 때 연관관계를 가지고 있는 부모의 값도 함꼐 저장됨.
     * - REMOVE : 엔티티를 제거할 때 연관된 엔티티도 모두 제거한다.
-    * - MERGE : 엔티티 상태를 병합할 깨 연관된 하위 엔티티도 모두 병합한다.*/
+    * - MERGE : 엔티티 상태를 병합할 때 연관된 하위 엔티티도 모두 병합한다.
+    * - DETACH : 엔티티를 DETACH() 하면 연관 엔티티도 DETACH 상태가 된다.
+    * */
 
     @JoinColumn(name = "category_code")
     // @ManyToOne(cascade = CascadeType.PERSIST) // 이걸 하면 부모도 자동으로 등록을 한다.
     // @ManyToOne(cascade = CascadeType.REMOVE)
-    @ManyToOne(cascade = CascadeType.MERGE)
+    @ManyToOne(cascade = CascadeType.DETACH)
     private Category category;
 
    @Column(name = "orderable_status")
